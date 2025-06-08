@@ -29,7 +29,7 @@ export const Footer = () => {
                 <span className="sr-only">LinkedIn</span>
                 <Linkedin size={20} />
               </a>
-              <a href="aakash.srisai@gmail.com" className="text-dark-100 dark:text-light-300 hover:text-primary-500 dark:hover:text-primary-400">
+              <a href=" mailto:aakash.srisai@gmail.com" className="text-dark-100 dark:text-light-300 hover:text-primary-500 dark:hover:text-primary-400">
                 <span className="sr-only">Mail</span>
                 <Mail size={20} />
               </a>

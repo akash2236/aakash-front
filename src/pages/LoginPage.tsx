@@ -44,7 +44,6 @@ export const LoginPage = () => {
       } else {
         setAuthenticatedUser(data.user);
         localStorage.setItem("token",data.token);
-        
         navigate('/');
       }
     } catch (err) {
@@ -75,7 +74,7 @@ export const LoginPage = () => {
       if (!response.ok) {
         throw new Error(data.error || 'OTP verification failed');
       }
-
+      localStorage.setItem("token",data.token);
       setAuthenticatedUser(data.user);
       navigate('/');
     } catch (err) {
