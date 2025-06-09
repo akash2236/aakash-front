@@ -76,56 +76,62 @@ export const UploadPage = () => {
   };
 
   // Handle file upload
-  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+ const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const file = e.target.files?.[0];
+  if (!file) return;
 
-    if (storageUsage.used + file.size > storageUsage.total) {
-      showToast('Storage limit exceeded. Please upgrade your plan.', 'error');
-      return;
-    }
+  if (storageUsage.used + file.size > storageUsage.total) {
+    showToast('Storage limit exceeded. Please upgrade your plan.', 'error');
+    return;
+  }
 
-    setUploading(true);
-    setUploadProgress(0);
+  setUploading(true);
+  setUploadProgress(0);
 
-    const formData = new FormData();
-    formData.append('file', file);
+  const formData = new FormData();
+  formData.append('file', file);
+  formData.append('encrypt', encryptOnUpload.toString()); // Add encryption preference
 
-    try {
-      const token = localStorage.getItem('token');
-      const response = await axios.post(
-        'http://localhost:3001/api/files/upload',
-        formData,
-        {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-            Authorization: `Bearer ${token}`
-          },
-          onUploadProgress: (progressEvent) => {
-            if (progressEvent.total) {
-              const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total);
-              setUploadProgress(progress);
-            }
+  try {
+    const token = localStorage.getItem('token');
+    const response = await axios.post(
+      'http://localhost:3001/api/files/upload',
+      formData,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          Authorization: `Bearer ${token}`
+        },
+        onUploadProgress: (progressEvent) => {
+          if (progressEvent.total) {
+            const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+            setUploadProgress(progress);
           }
         }
-      );
-      setFiles([...files, response.data.file]);
-      setStorageUsage(prev => ({ ...prev, used: prev.used + file.size }));
-      showToast('File uploaded and encrypted successfully', 'success');
-    } catch (error: any) {
-      console.error('Upload failed:', error);
-      showToast(
-        error.response?.data?.error || 'Failed to upload file',
-        'error'
-      );
-    } finally {
-      setUploading(false);
-      setUploadProgress(0);
-      if (fileInputRef.current) {
-        fileInputRef.current.value = '';
       }
+    );
+    setFiles([...files, response.data.file]);
+    setStorageUsage(prev => ({ ...prev, used: prev.used + file.size }));
+    showToast(
+      encryptOnUpload 
+        ? 'File uploaded and encrypted successfully' 
+        : 'File uploaded successfully',
+      'success'
+    );
+  } catch (error: any) {
+    console.error('Upload failed:', error);
+    showToast(
+      error.response?.data?.error || 'Failed to upload file',
+      'error'
+    );
+  } finally {
+    setUploading(false);
+    setUploadProgress(0);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
     }
-  };
+  }
+};
 
   // Handle drag over
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
