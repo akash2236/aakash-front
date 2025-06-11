@@ -52,7 +52,7 @@ export const Header = () => {
                 animate={{ x: 0, opacity: 1 }}
                 transition={{ duration: 0.5, delay: 0.1 }}
               >
-                <span className="text-xl font-sora font-bold text-primary-600 dark:text-primary-400">
+                <span className="text-xl font-sora font-bold text-primary-600 dark:text-primary-400 ">
                   Aethaur<span className="text-secondary-500">Vault</span>
                 </span>
               </motion.div>
